@@ -1,0 +1,47 @@
+// All Css Here
+@import '~bootstrap/dist/css/bootstrap.min.css';
+@import "../public/assets/css/plugins.css";
+@import "../public/assets/scss/style";
+@import "~slick-carousel/slick/slick.css";
+@import "~slick-carousel/slick/slick-theme.css";
+@import 'node_modules/react-modal-video/scss/modal-video.scss';
+@import "../public/assets/scss/default/variables";
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;700&display=swap');
+
+.logo-title{
+    font-family: "Josefin Sans", sans-serif !important;
+    font-size: 2.5rem !important;
+    vertical-align: center;
+    font-weight: bold;
+    text-align: center;
+    span {
+        font-weight: 100 !important;
+        font-size: 3.5rem !important;
+        transform: translateY(-0.3rem);
+    }
+}
+.blog-body {
+    /* Blog single styles */
+    img {
+        height: 60vh !important;
+        width: auto !important;
+        margin: 3rem auto;
+        display: block;
+    }
+    a {
+        color: $primary;
+    }
+}
+
+
+.blog {
+    @media screen and (min-width: 768px) {
+        height: 50vh;
+        // blog grid image
+        img{
+            height: 50vh;
+            width: auto;
+            object-fit: cover;
+        }
+    }
+}
