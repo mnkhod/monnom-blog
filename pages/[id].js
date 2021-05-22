@@ -12,8 +12,10 @@ export async function getServerSideProps(context){
     const {id} = context.params;
     const blogResponse = await axios.get(`${process.env.NEXT_PUBLIC_REACT_APP_API_URL}/blogs/${id}`);
     const blog = blogResponse.data;
+    const host = context.req.headers.host;
     return {
         props: {
+            host,
             blog
         }
     }

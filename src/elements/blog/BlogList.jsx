@@ -6,7 +6,7 @@ import Router, { useRouter } from 'next/router';
 
 const renderLink = (child, params) => {
     const router = useRouter();
-    console.log(params);
+    console.log(router.pathname);
     return (
         <a  
             onClick={(e) => {

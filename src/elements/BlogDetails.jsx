@@ -1,8 +1,9 @@
 import React, { Component, useState, useEffect, useMemo } from "react";
-import axios from 'axios';
+import Head from 'next/head';
+
 import PageHelmet from "../component/common/Helmet";
 import ModalVideo from 'react-modal-video';
-import { FiClock , FiUser , FiMessageCircle , FiHeart, FiFolder } from "react-icons/fi";
+import { FiClock , FiUser , FiMessageCircle , FiHeart, FiFolder, FiFacebook, FiTwitter } from "react-icons/fi";
 import Link from 'next/link';
 import {FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon} from 'react-share';
 
@@ -17,11 +18,20 @@ var MarkdownIt = require('markdown-it'),
     md = new MarkdownIt();
 // var result = md.render('# markdown-it rulezz!');
 
+const ShareButton = (props) => {
+    return <div style={{
+        padding: '1rem', color: 'white', borderRadius: '1rem', display: 'flex', gap: '1rem', alignItems: 'center'
+        , ...props.style,}}>
+        {props.children}
+    </div>
+}
+
 export default function BlogDetails(props){
 
     const [isOpen, setIsOpen] = useState(false);
     const [blog, setBlog] = useState(props.blog);
     const router = useRouter();
+
     const openModal = () => {
         setIsOpen(true);
     }  
@@ -31,24 +41,19 @@ export default function BlogDetails(props){
             fetchBlog();
         }
     }, []);
+
+    const host = useMemo(() => {
+        return props.host;
+    }, [props.host]);
     
     const dateStr = useMemo(() => {
         const dt = new Date(blog?.updated_at);
         console.log(dt);
         return `${dt.getFullYear()}-${dt.getMonth() + 1}-${dt.getDate()}`;  
-        return ''
     }, [blog?.created_at]);
-
-    if (blog){
-        console.log(`${process.env.NEXT_PUBLIC_REACT_APP_API_URL}${blog.picture?.url}`)
-    }
-    if (!blog){
-        return (<Loading />)
-    }
 
     const contentHtml = useMemo(() => {
         if (blog?.content){
-           
             try{
                 return blog?.content?.replace(/\/uploads\//g, `${process.env.NEXT_PUBLIC_REACT_APP_API_URL}/uploads/`);
             }catch(e){
@@ -57,13 +62,84 @@ export default function BlogDetails(props){
         }
         return '';
     }, [blog?.content]);
+
+    const mainImageUrl = useMemo(() => {
+        return `${process.env.NEXT_PUBLIC_REACT_APP_API_URL}${blog.picture?.url}`;
+    }, [blog.picture?.url]);
+
+    const socialUrl = useMemo(() => {
+        return `${host}/${blog?.id}`;
+    }, [blog?.id]);
+
+    const socialTitle = useMemo(() => {
+        return blog?.title;
+    }, [blog?.title]);
+
+    const socialDescription = useMemo(() => {
+        if (blog.content){
+            return blog.content.slice(0, Math.min(blog.length, 50));
+        }
+        return '';
+    }, [blog]);
+
+    if (blog){
+        console.log(`${mainImageUrl}`)
+    }
+    if (!blog){
+        return (<Loading />)
+    }
+
+    const socialShareButtons = useMemo(() => {
+        return (
+            <div style={{display: 'flex', width: '100%', justifyContent: 'flex-end', marginBottom: '3rem'}}>
+                <FacebookShareButton url={`${socialUrl}`} >
+                    {/* <FacebookIcon round />  */}
+                    <ShareButton style={{backgroundColor: '#4267B2'}}>
+                        <FiFacebook size={'1.5rem'} fill={'white'}/>
+                        <p style={{color: 'white'}}>Хуваалцах</p>
+                    </ShareButton>
+                </FacebookShareButton>
+                <TwitterShareButton
+                    url={`${socialUrl}`}
+                    onClick={() => console.log(socialUrl)} style={{
+                    paddingTop: 10,
+                    paddingBottom: 10,
+                    paddingLeft: 20,
+                    paddingRight: 20,
+                    borderRadius: 10
+                    }}>
+                        <ShareButton style={{backgroundColor: '#1DA1F2'}}>
+                            <FiTwitter size={'1.5rem'} fill={'white'}/>
+                            <p style={{color: 'white'}}>Жиргэх</p>
+                        </ShareButton>
+                    {/* <TwitterIcon round />
+                    Жиргэх */}
+                </TwitterShareButton>
+            </div>
+        )
+    }, [])
+
+    
+
     return (
         <>
+            <Head>
+                {/* Twitter share */}
+                <meta name="twitter:card" content="summary" />
+                <meta property="twitter:title" content={socialTitle} />
+                <meta property="twitter:description" content={socialDescription} />
+                <meta property="twitter:image" content={mainImageUrl} />
+                {/* Facebook share */}
+                <meta property="og:title" content={socialTitle} />
+                <meta property="og:description" content={socialDescription} />
+                <meta property="og:image" content={mainImageUrl} />
+                <meta property="og:url" content={host} />
+            </Head>
             <div>
                 <PageHelmet pageTitle='Blog Details' />
                 <Header headertransparent="header--transparent" colorblack="color--black" logoname="logo.png" />
                 <div className="rn-page-title-area pt--120 pb--190 bg_image" data-black-overlay="7" style={{
-                    backgroundImage: `url("${process.env.NEXT_PUBLIC_REACT_APP_API_URL}${blog.picture?.url}")`
+                    backgroundImage: `url("${mainImageUrl}")`
                 }}>
                     <div className="container">
                         <div className="row">
@@ -74,7 +150,6 @@ export default function BlogDetails(props){
                                     <ul className="blog-meta d-flex justify-content-center align-items-center">
                                         <li><FiClock />{dateStr}</li>
                                         <li><FiFolder />{blog?.blog_category?.name || ''}</li>
-                                        
                                     </ul>
                                 </div>
                             </div>
@@ -89,23 +164,9 @@ export default function BlogDetails(props){
                         <div className="row">
                             <div className="col-lg-12">
                                 <div className="inner-wrapper blog-body">
-                                    
                                     <div className="inner" dangerouslySetInnerHTML={{__html: md.render(contentHtml)}}>
                                     </div>
-                                    <div style={{display: 'flex', width: '100%', justifyContent: 'flex-end'}}>
-                                        <FacebookShareButton title="Facebook Share" url={`${router.pathname}`} >
-                                            <FacebookIcon round />
-                                        </FacebookShareButton>
-                                        <TwitterShareButton title="Twitter Share" onClick={() => console.log(router.pathname)} url={`${router.pathname}`} style={{
-                                            paddingTop: 10,
-                                            paddingBottom: 10,
-                                            paddingLeft: 20,
-                                            paddingRight: 20,
-                                            borderRadius: 10
-                                            }}>
-                                            <TwitterIcon round />
-                                        </TwitterShareButton>
-                                    </div>
+                                    {socialShareButtons}
                                     <Link  href="/">
                                         <a className="rn-btn">Буцах</a>
                                     </Link>
