@@ -14,9 +14,6 @@ import Footer from "../component/footer/Footer";
 import Loading from '../component/common/Loading';
 import { useRouter } from "next/router";
 
-var MarkdownIt = require('markdown-it'),
-    md = new MarkdownIt();
-// var result = md.render('# markdown-it rulezz!');
 
 const ShareButton = (props) => {
     return <div style={{
@@ -53,14 +50,7 @@ export default function BlogDetails(props){
     }, [blog?.created_at]);
 
     const contentHtml = useMemo(() => {
-        if (blog?.content){
-            try{
-                return blog?.content?.replace(/\/uploads\//g, `${process.env.NEXT_PUBLIC_REACT_APP_API_URL}/uploads/`);
-            }catch(e){
-                return '';
-            }
-        }
-        return '';
+        return blog?.content || '';
     }, [blog?.content]);
 
     const mainImageUrl = useMemo(() => {
@@ -164,7 +154,7 @@ export default function BlogDetails(props){
                         <div className="row">
                             <div className="col-lg-12">
                                 <div className="inner-wrapper blog-body">
-                                    <div className="inner" dangerouslySetInnerHTML={{__html: md.render(contentHtml)}}>
+                                    <div className="inner" dangerouslySetInnerHTML={{__html: contentHtml}}>
                                     </div>
                                     {socialShareButtons}
                                     <Link  href="/">

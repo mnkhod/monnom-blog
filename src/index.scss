@@ -27,6 +27,11 @@
         width: auto !important;
         margin: 3rem auto;
         display: block;
+        object-fit: cover;
+    }
+    figure {
+        display: block;
+        margin: 3rem auto;
     }
     a {
         color: $primary;
