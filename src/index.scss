@@ -20,6 +20,42 @@
         transform: translateY(-0.3rem);
     }
 }
+
+.footer-logo-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    h2 {
+        flex-shrink: 1;
+    }
+    @media screen and (max-width: 449px) {
+        & {
+            flex-wrap: wrap;
+            justify-content: center !important;
+        }
+    }
+}
+
+.footer-logo {
+    margin-left: 1rem;
+    width: 10rem;
+    height: 10rem;
+}
+@media screen and (max-width: 449px) {
+    .footer-left {
+        .inner{
+            text-align: center !important;
+        }
+    }
+    .footer-cta{
+        order: 1 !important;
+        margin-top: 1rem !important;
+    }
+    .footer-logo{ 
+        order: 2 !important;
+    }
+}
+
 .blog-body {
     /* Blog single styles */
     img {

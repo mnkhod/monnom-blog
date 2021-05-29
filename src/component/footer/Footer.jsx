@@ -17,11 +17,11 @@ class Footer extends Component{
                                 <div className="footer-left">
                                     <div className="inner">
                                         <span></span>
-                                        <div style={{display: 'flex', flexWrap: 'wrap', gap: 3}}>
+                                        <div className="footer-logo-container">
                                             <h2>PodCasts, Radio <br />eBooks</h2>
-                                            <img src="/assets/images/monnom-logo-512.png" style={{height: '10rem', width: '10rem'}} />
+                                            <img className="footer-logo" src="/assets/images/monnom-logo-512.png" />
                                         </div>
-                                        <a className="rn-button-style--2" href="https://www.facebook.com/www.monnom.mn">
+                                        <a className="rn-button-style--2 footer-cta" href="https://www.facebook.com/www.monnom.mn">
                                             <span>Холбоо барих</span>
                                         </a>
                                     </div>
