@@ -58,7 +58,7 @@ export default function BlogDetails(props){
     }, [blog.picture?.url]);
 
     const socialUrl = useMemo(() => {
-        return `${host}/${blog?.id}`;
+        return `${process.env.NEXT_PUBLIC_DOMAIN_NAME}/${blog?.id}`;
     }, [blog?.id]);
 
     const socialTitle = useMemo(() => {
@@ -82,7 +82,7 @@ export default function BlogDetails(props){
     const socialShareButtons = useMemo(() => {
         return (
             <div style={{display: 'flex', width: '100%', justifyContent: 'flex-end', marginBottom: '3rem'}}>
-                <FacebookShareButton url={`${socialUrl}`} >
+                <FacebookShareButton url={`${socialUrl}`} onClick={() => console.log(socialUrl)} >
                     {/* <FacebookIcon round />  */}
                     <ShareButton style={{backgroundColor: '#4267B2'}}>
                         <FiFacebook size={'1.5rem'} fill={'white'}/>
